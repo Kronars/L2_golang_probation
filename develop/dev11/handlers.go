@@ -117,6 +117,7 @@ func CreateHandler(w http.ResponseWriter, r *http.Request) {
 	// Проверка метода
 	if r.Method != "POST" {
 		fmt.Fprint(w, "Поддерживается только POST")
+		SendLog(true, r.URL.Path, "Неккоретный метод: "+r.Method)
 		return
 	}
 	defer r.Body.Close()
@@ -125,6 +126,7 @@ func CreateHandler(w http.ResponseWriter, r *http.Request) {
 	date, user_id, valid := ParseValid_DateUser(r.URL.Query())
 	if !valid {
 		http.Error(w, SerValidErr("incorrect url params"), 400)
+		SendLog(true, r.URL.Path, "Невалидные параметры в url")
 		return
 	}
 
@@ -143,6 +145,7 @@ func CreateHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	w.Write(SerJsonResult("Created"))
+	SendLog(false, r.URL.Path, "Успех")
 }
 
 // * /update_event + ?user_id=3&date=2019-09-09&event_id=0 + body: { "data": "вставить текст" }
@@ -151,6 +154,7 @@ func UpdHandler(w http.ResponseWriter, r *http.Request) {
 	// Проверка метода
 	if r.Method != "POST" {
 		fmt.Fprint(w, "Поддерживается только POST")
+		SendLog(true, r.URL.Path, "Неккоретный метод: "+r.Method)
 		return
 	}
 	defer r.Body.Close()
@@ -159,6 +163,7 @@ func UpdHandler(w http.ResponseWriter, r *http.Request) {
 	user_id, date, event_id, valid := ParseValid_UserDateEvent_id(r.URL.Query())
 	if !valid {
 		http.Error(w, SerValidErr("incorrect url params"), 400)
+		SendLog(true, r.URL.Path, "Невалидные параметры в url")
 		return
 	}
 
@@ -180,6 +185,7 @@ func UpdHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(SerJsonResult("Updated"))
+	SendLog(false, r.URL.Path, "Успех")
 }
 
 // * /delete_event ?user_id=3&date=2019-09-09&event_id=0 + body: { "data": "вставить текст" }
@@ -188,6 +194,7 @@ func DelHandler(w http.ResponseWriter, r *http.Request) {
 	// Проверка метода
 	if r.Method != "POST" {
 		fmt.Fprint(w, "Поддерживается только POST")
+		SendLog(true, r.URL.Path, "Неккоретный метод: "+r.Method)
 		return
 	}
 	defer r.Body.Close()
@@ -196,6 +203,7 @@ func DelHandler(w http.ResponseWriter, r *http.Request) {
 	user_id, date, event_id, valid := ParseValid_UserDateEvent_id(r.URL.Query())
 	if !valid {
 		http.Error(w, SerValidErr("incorrect url params"), 400)
+		SendLog(true, r.URL.Path, "Невалидные параметры в url")
 		return
 	}
 
@@ -210,6 +218,7 @@ func DelHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(SerJsonResult("Deleted"))
+	SendLog(false, r.URL.Path, "Успех")
 }
 
 // -------- GET Обработчики --------
@@ -220,6 +229,7 @@ func DayEventsHandler(w http.ResponseWriter, r *http.Request) {
 	// Проверка метода
 	if r.Method != "GET" {
 		fmt.Fprint(w, "Поддерживается только GET")
+		SendLog(true, r.URL.Path, "Неккоретный метод: "+r.Method)
 		return
 	}
 	defer r.Body.Close()
@@ -228,6 +238,7 @@ func DayEventsHandler(w http.ResponseWriter, r *http.Request) {
 	date, user_id, valid := ParseValid_DateUser(r.URL.Query())
 	if !valid {
 		http.Error(w, SerValidErr("incorrect url params"), 400)
+		SendLog(true, r.URL.Path, "Невалидные параметры в url")
 		return
 	}
 
@@ -239,6 +250,7 @@ func DayEventsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(events_json)
+	SendLog(false, r.URL.Path, "Успех")
 }
 
 // * GET /events_for_week + ?user_id=3&date=2019-09-09
@@ -247,6 +259,7 @@ func WeekEventsHandler(w http.ResponseWriter, r *http.Request) {
 	// Проверка метода
 	if r.Method != "GET" {
 		fmt.Fprint(w, "Поддерживается только GET")
+		SendLog(true, r.URL.Path, "Неккоретный метод: "+r.Method)
 		return
 	}
 	defer r.Body.Close()
@@ -255,6 +268,7 @@ func WeekEventsHandler(w http.ResponseWriter, r *http.Request) {
 	date, user_id, valid := ParseValid_DateUser(r.URL.Query())
 	if !valid {
 		http.Error(w, SerValidErr("incorrect url params"), 400)
+		SendLog(true, r.URL.Path, "Невалидные параметры в url")
 		return
 	}
 
@@ -266,6 +280,7 @@ func WeekEventsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(events_json)
+	SendLog(false, r.URL.Path, "Успех")
 }
 
 // * GET /events_for_month + ?user_id=3&date=2019-09-09
@@ -274,6 +289,7 @@ func MonthEventsHandler(w http.ResponseWriter, r *http.Request) {
 	// Проверка метода
 	if r.Method != "GET" {
 		fmt.Fprint(w, "Поддерживается только GET")
+		SendLog(true, r.URL.Path, "Неккоретный метод: "+r.Method)
 		return
 	}
 	defer r.Body.Close()
@@ -282,6 +298,7 @@ func MonthEventsHandler(w http.ResponseWriter, r *http.Request) {
 	date, user_id, valid := ParseValid_DateUser(r.URL.Query())
 	if !valid {
 		http.Error(w, SerValidErr("incorrect url params"), 400)
+		SendLog(true, r.URL.Path, "Невалидные параметры в url")
 		return
 	}
 
@@ -293,6 +310,7 @@ func MonthEventsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(events_json)
+	SendLog(false, r.URL.Path, "Успех")
 }
 
 // - Вспомогательное для распаковки -
@@ -351,4 +369,14 @@ func ParseValid_UserDateEvent_id(u url.Values) (int, EventDate, int, bool) {
 	}
 
 	return user_id, date, int(event_id), true
+}
+
+// --- Логирование ---
+
+func SendLog(is_error bool, path, desc string) {
+	prefix := "[info] "
+	if is_error {
+		prefix = "[err] "
+	}
+	fmt.Printf("%s\t%s\t%s\n", prefix, path, desc)
 }
